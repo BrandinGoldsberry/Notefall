@@ -1,0 +1,2 @@
+rootProject.name='Notefall'
+include ':app'
