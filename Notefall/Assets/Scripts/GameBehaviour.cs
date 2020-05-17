@@ -36,7 +36,7 @@ public class GameBehaviour : MonoBehaviour
             new KeyValuePair<float, int>(8.8f, 2),
             new KeyValuePair<float, int>(9.10f, 2),
         };
-        Song = new Song(newSpawns.Length, newSpawns, 10);
+        Song = new Song(newSpawns.Length, newSpawns, 5);
 
         //keep track of existing notes
         spawnedNotes = new List<GameObject>();
@@ -54,18 +54,21 @@ public class GameBehaviour : MonoBehaviour
         //initialize spawn
         nextNote = Song.Spawn();
         //add method to event
+        //spawnEvent.AddListener(Camera.main.gameObject.GetComponent<DebugText>().UpdateDebugText);
         spawnEvent.AddListener(SpawnNote);
 
         //hitbar set
         hitBar = GameObject.Find("HitBar");
     }
 
+    //debugvar
+    private int clicks;
     void Update()
     {
         //If we get this number stop the song
         //Its A) The return of Song.Spawn() if there isn't anymore
         //B) If we get this at any time the thing will break anyway
-        if(nextNote.Value <= -1)
+        if(nextNote.Value <= -1 && spawnedNotes.Count < 1)
         {
             //TODO: Write code that jumps to end scene of the song
             //We can do this by creating a Unity Scene with a UI that has variables for setting up the values
@@ -77,7 +80,7 @@ public class GameBehaviour : MonoBehaviour
             //Debug.Log("CT:" + CurrentTime + " NN: " + nextNote.Key + "TF: " + (CurrentTime > nextNote.Key));
 
             //On next frame where time is greater than the target time spawn the next note
-            if (CurrentTime > nextNote.Key)
+            if (nextNote.Value > -1 && CurrentTime > nextNote.Key)
             {
                 spawnEvent.Invoke();
             }
@@ -95,11 +98,12 @@ public class GameBehaviour : MonoBehaviour
                     Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
                     //send an invisible line out to hit a game object
                     RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
-                    Debug.Log("Click!");
-                    //if it hit something then do something
-                    if (hit.collider != null)
+                    //Debug.Log("Click! " + clicks++);
+                    //if it hit note then do something
+                    if (hit.collider != null && hit.collider.name.Contains("Note"))
                     {
                         //Debug.Log(hit.transform.gameObject);
+                        spawnedNotes.Remove(hit.transform.gameObject);
                         Destroy(hit.transform.gameObject);
                     }
                 }
@@ -110,7 +114,9 @@ public class GameBehaviour : MonoBehaviour
     void SpawnNote()
     {
         //create a note and then setup next spawn
+        //Debug.Log(nextNote.Value);
         GameObject spawned = Instantiate(note, SpawnLocations[nextNote.Value].transform);
+        spawned.name = "Note " + Song.spawned;
         //add spawned to the list
         spawnedNotes.Add(spawned);
         //Set the note's speed to the speed of the song
@@ -118,5 +124,11 @@ public class GameBehaviour : MonoBehaviour
         //Debug.Log(spawned);
         //setup next spawn
         nextNote = Song.Spawn();
+    }
+
+    void OnDestroyedNote(Object sender, NoteEventArgs e)
+    {
+        spawnedNotes.Remove(e.Sender);
+        Destroy(e.Sender);
     }
 }

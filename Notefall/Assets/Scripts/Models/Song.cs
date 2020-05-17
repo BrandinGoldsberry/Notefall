@@ -17,7 +17,7 @@ public class Song
     public float MinAccuracy;
 
     //The song keeps track of how many notes it has spawned
-    private int spawned;
+    public int spawned { private set; get; }
 
     public Song(int NoteNum, KeyValuePair<float, int>[] SpawnTimes, int SongSpeed)
     {

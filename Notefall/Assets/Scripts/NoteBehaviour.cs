@@ -1,11 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class NoteBehaviour : MonoBehaviour
 {
     //NEVER leave this at zero!
     public int Speed { get; set; }
+
+    public EventHandler<NoteEventArgs> NoteDestoyed;
 
     // Start is called before the first frame update
     void Start()
@@ -27,7 +31,16 @@ public class NoteBehaviour : MonoBehaviour
         //Helps clean up on screen clutter
         if(transform.position.y <= -20)
         {
-            Destroy(this.gameObject);
+            NoteDestoyed.Invoke(this, new NoteEventArgs(gameObject));
         }
+    }
+}
+
+public class NoteEventArgs : EventArgs
+{
+    public GameObject Sender { get; set; }
+    public NoteEventArgs(GameObject sender)
+    {
+        Sender = sender;
     }
 }
