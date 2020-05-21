@@ -116,8 +116,8 @@ public class GameBehaviour : MonoBehaviour
                         curSnare++;
                         if (curSnare == NoteSounds.Length) curSnare = 0;
                         //Debug.Log(hit.transform.gameObject);
-                        spawnedNotes.Remove(hit.transform.gameObject);
-                        Destroy(hit.transform.gameObject);
+                        //this is stupid
+                        hit.transform.gameObject.GetComponent<NoteBehaviour>().OnDestroyObject(new NoteEventArgs(hit.transform.gameObject));
                     }
                 }
             }
@@ -134,12 +134,13 @@ public class GameBehaviour : MonoBehaviour
         spawnedNotes.Add(spawned);
         //Set the note's speed to the speed of the song
         spawned.GetComponent<NoteBehaviour>().Speed = Song.SongSpeed;
+        spawned.GetComponent<NoteBehaviour>().NoteDestoyed += OnDestroyedNote;
         //Debug.Log(spawned);
         //setup next spawn
         nextNote = Song.Spawn();
     }
 
-    void OnDestroyedNote(Object sender, NoteEventArgs e)
+    void OnDestroyedNote(object sender, NoteEventArgs e)
     {
         spawnedNotes.Remove(e.Sender);
         Destroy(e.Sender);

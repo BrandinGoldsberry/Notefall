@@ -9,7 +9,7 @@ public class NoteBehaviour : MonoBehaviour
     //NEVER leave this at zero!
     public int Speed { get; set; }
 
-    public EventHandler<NoteEventArgs> NoteDestoyed;
+    public event EventHandler<NoteEventArgs> NoteDestoyed;
 
     // Start is called before the first frame update
     void Start()
@@ -31,8 +31,13 @@ public class NoteBehaviour : MonoBehaviour
         //Helps clean up on screen clutter
         if(transform.position.y <= -20)
         {
-            NoteDestoyed.Invoke(this, new NoteEventArgs(gameObject));
+            OnDestroyObject(new NoteEventArgs(gameObject));
         }
+    }
+
+    public void OnDestroyObject(NoteEventArgs args)
+    {
+        NoteDestoyed?.Invoke(this, args);
     }
 }
 

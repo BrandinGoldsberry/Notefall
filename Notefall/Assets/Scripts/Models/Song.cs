@@ -23,7 +23,7 @@ public class Song
 
     public Song()
     {
-        MinAccuracy = 0.25f;
+        MinAccuracy = 0.50f;
         spawned = 0;
     }
 
