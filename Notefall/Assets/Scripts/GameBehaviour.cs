@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Models;
+using Assets.Scripts.Util;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,6 +9,8 @@ public class GameBehaviour : MonoBehaviour
 {
     public Song Song;
     public GameObject note;
+    //to be created at runtime with the script to load a song
+    public string JSONSong = "F:\\NoteFallSongs\\SongTest.json";
 
     private GameObject[] SpawnLocations;
     private GameObject hitBar;
@@ -17,7 +21,7 @@ public class GameBehaviour : MonoBehaviour
     private float CurrentTime;
 
     //stores the next note to spawn
-    private KeyValuePair<float, int> nextNote;
+    private NoteTime nextNote;
 
     private List<GameObject> spawnedNotes;
 
@@ -26,17 +30,18 @@ public class GameBehaviour : MonoBehaviour
         //NOTE: this code is all temporary to get note behaviour initialized
         //TODO: Make programatic and not hard coded
         //Initialize notes
-        KeyValuePair<float, int>[] newSpawns =
-        {
-            new KeyValuePair<float, int>(0f, 0),
-            new KeyValuePair<float, int>(2.2f, 2),
-            new KeyValuePair<float, int>(5.4f, 1),
-            new KeyValuePair<float, int>(6.5f, 0),
-            new KeyValuePair<float, int>(7.6f, 1),
-            new KeyValuePair<float, int>(8.8f, 2),
-            new KeyValuePair<float, int>(9.10f, 2),
-        };
-        Song = new Song(newSpawns.Length, newSpawns, 5);
+        //KeyValuePair<float, int>[] newSpawns =
+        //{
+        //    new KeyValuePair<float, int>(0f, 0),
+        //    new KeyValuePair<float, int>(2.2f, 2),
+        //    new KeyValuePair<float, int>(5.4f, 1),
+        //    new KeyValuePair<float, int>(6.5f, 0),
+        //    new KeyValuePair<float, int>(7.6f, 1),
+        //    new KeyValuePair<float, int>(8.8f, 2),
+        //    new KeyValuePair<float, int>(9.10f, 2),
+        //};
+        //Song = new Song(newSpawns.Length, newSpawns, 5);
+        Song = SongLoader.LoadSong(JSONSong);
 
         //keep track of existing notes
         spawnedNotes = new List<GameObject>();
@@ -52,6 +57,7 @@ public class GameBehaviour : MonoBehaviour
         };
 
         //initialize spawn
+        Debug.Log(Song.SpawnTime_SpawnLoc[0]);
         nextNote = Song.Spawn();
         //add method to event
         //spawnEvent.AddListener(Camera.main.gameObject.GetComponent<DebugText>().UpdateDebugText);
@@ -62,13 +68,13 @@ public class GameBehaviour : MonoBehaviour
     }
 
     //debugvar
-    private int clicks;
+    //private int clicks;
     void Update()
     {
         //If we get this number stop the song
         //Its A) The return of Song.Spawn() if there isn't anymore
         //B) If we get this at any time the thing will break anyway
-        if(nextNote.Value <= -1 && spawnedNotes.Count < 1)
+        if(nextNote.Time < -1 && spawnedNotes.Count < 1)
         {
             //TODO: Write code that jumps to end scene of the song
             //We can do this by creating a Unity Scene with a UI that has variables for setting up the values
@@ -80,11 +86,11 @@ public class GameBehaviour : MonoBehaviour
             //Debug.Log("CT:" + CurrentTime + " NN: " + nextNote.Key + "TF: " + (CurrentTime > nextNote.Key));
 
             //On next frame where time is greater than the target time spawn the next note
-            if (nextNote.Value > -1 && CurrentTime > nextNote.Key)
+            if (nextNote.Time > -1 && CurrentTime > nextNote.Time)
             {
+                
                 spawnEvent.Invoke();
             }
-
             //get if left mouse was click (should work on mobile too)
             if (Input.GetMouseButtonDown(0))
             {
@@ -115,7 +121,7 @@ public class GameBehaviour : MonoBehaviour
     {
         //create a note and then setup next spawn
         //Debug.Log(nextNote.Value);
-        GameObject spawned = Instantiate(note, SpawnLocations[nextNote.Value].transform);
+        GameObject spawned = Instantiate(note, SpawnLocations[nextNote.SpawnLocation].transform);
         spawned.name = "Note " + Song.spawned;
         //add spawned to the list
         spawnedNotes.Add(spawned);
