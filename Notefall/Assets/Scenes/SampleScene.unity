@@ -221,6 +221,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   note: {fileID: 2118675344786473595, guid: c497c7a5bbb99fe45ad167069e982e6c, type: 3}
+  NotePlayer: {fileID: 905144813}
+  NoteSounds:
+  - {fileID: 8300000, guid: 167bee2d8e6b33f4b8cce244a9add3eb, type: 3}
+  - {fileID: 8300000, guid: ee07cfe98f08f4043ae94597dc6baa42, type: 3}
+  - {fileID: 8300000, guid: ab0f660cf765d5d47b8cad58c5bb9567, type: 3}
+  JSONSong: F:\NoteFallSongs\SongTest.json
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -402,9 +408,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 167bee2d8e6b33f4b8cce244a9add3eb, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.21
   m_Pitch: 1
   Loop: 0
   Mute: 0

@@ -9,6 +9,8 @@ public class GameBehaviour : MonoBehaviour
 {
     public Song Song;
     public GameObject note;
+    public AudioSource NotePlayer;
+    public AudioClip[] NoteSounds;
     //to be created at runtime with the script to load a song
     public string JSONSong = "F:\\NoteFallSongs\\SongTest.json";
 
@@ -24,6 +26,8 @@ public class GameBehaviour : MonoBehaviour
     private NoteTime nextNote;
 
     private List<GameObject> spawnedNotes;
+
+    private int curSnare;
 
     void Start()
     {
@@ -108,6 +112,9 @@ public class GameBehaviour : MonoBehaviour
                     //if it hit note then do something
                     if (hit.collider != null && hit.collider.name.Contains("Note"))
                     {
+                        NotePlayer.PlayOneShot(NoteSounds[curSnare]);
+                        curSnare++;
+                        if (curSnare == NoteSounds.Length) curSnare = 0;
                         //Debug.Log(hit.transform.gameObject);
                         spawnedNotes.Remove(hit.transform.gameObject);
                         Destroy(hit.transform.gameObject);
