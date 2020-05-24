@@ -13,7 +13,6 @@ public class GameBehaviour : MonoBehaviour
     public AudioSource NotePlayer;
     public AudioClip[] NoteSounds;
 
-    public string JSONSong = "F:\\Songs\\SongTest.json";
     public string SongName;
 
     private GameObject[] SpawnLocations;
@@ -54,7 +53,8 @@ public class GameBehaviour : MonoBehaviour
         {
             spawnLocs.GetChild(0).gameObject,
             spawnLocs.GetChild(1).gameObject,
-            spawnLocs.GetChild(2).gameObject
+            spawnLocs.GetChild(2).gameObject,
+            spawnLocs.GetChild(3).gameObject
         };
 
         //initialize spawn
