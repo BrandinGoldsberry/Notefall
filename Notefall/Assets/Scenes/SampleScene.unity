@@ -363,7 +363,7 @@ GameObject:
   - component: {fileID: 757390464}
   - component: {fileID: 757390463}
   m_Layer: 5
-  m_Name: ScoreDisplay (1)
+  m_Name: MultiplierDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -385,8 +385,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -158, y: 143.5}
-  m_SizeDelta: {x: 83.93036, y: 16.98814}
+  m_AnchoredPosition: {x: -158, y: 120}
+  m_SizeDelta: {x: 83.93036, y: 18.989983}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &757390463
 MonoBehaviour:
