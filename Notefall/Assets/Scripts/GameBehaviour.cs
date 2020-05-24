@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class GameBehaviour : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class GameBehaviour : MonoBehaviour
     public AudioSource NotePlayer;
     public AudioClip[] NoteSounds;
     //to be created at runtime with the script to load a song
-    public string JSONSong = "F:\\NoteFallSongs\\SongTest.json";
+    public string SongName;
 
     private GameObject[] SpawnLocations;
     private GameObject hitBar;
@@ -29,23 +30,18 @@ public class GameBehaviour : MonoBehaviour
 
     private int curSnare;
 
+    private int score = 0;
+    private float multiplier = 1;
+    private Text scoreDisplay;
+    private Text multiplierDisplay;
+
     void Start()
     {
-        //NOTE: this code is all temporary to get note behaviour initialized
-        //TODO: Make programatic and not hard coded
-        //Initialize notes
-        //KeyValuePair<float, int>[] newSpawns =
-        //{
-        //    new KeyValuePair<float, int>(0f, 0),
-        //    new KeyValuePair<float, int>(2.2f, 2),
-        //    new KeyValuePair<float, int>(5.4f, 1),
-        //    new KeyValuePair<float, int>(6.5f, 0),
-        //    new KeyValuePair<float, int>(7.6f, 1),
-        //    new KeyValuePair<float, int>(8.8f, 2),
-        //    new KeyValuePair<float, int>(9.10f, 2),
-        //};
-        //Song = new Song(newSpawns.Length, newSpawns, 5);
+        string JSONSong = Application.dataPath + "\\Songs\\" + SongName + ".json";
         Song = SongLoader.LoadSong(JSONSong);
+        scoreDisplay = GameObject.Find("ScoreDisplay").GetComponent<Text>();
+        multiplierDisplay = GameObject.Find("MulitplierDisplay").GetComponent<Text>();
+
 
         //keep track of existing notes
         spawnedNotes = new List<GameObject>();
@@ -116,8 +112,8 @@ public class GameBehaviour : MonoBehaviour
                         curSnare++;
                         if (curSnare == NoteSounds.Length) curSnare = 0;
                         //Debug.Log(hit.transform.gameObject);
-                        spawnedNotes.Remove(hit.transform.gameObject);
-                        Destroy(hit.transform.gameObject);
+                        //this is stupid
+                        hit.transform.gameObject.GetComponent<NoteBehaviour>().OnDestroyObject(new NoteEventArgs(hit.transform.gameObject, true));
                     }
                 }
             }
@@ -134,13 +130,27 @@ public class GameBehaviour : MonoBehaviour
         spawnedNotes.Add(spawned);
         //Set the note's speed to the speed of the song
         spawned.GetComponent<NoteBehaviour>().Speed = Song.SongSpeed;
+        spawned.GetComponent<NoteBehaviour>().NoteDestoyed += OnDestroyedNote;
         //Debug.Log(spawned);
         //setup next spawn
         nextNote = Song.Spawn();
     }
 
-    void OnDestroyedNote(Object sender, NoteEventArgs e)
+    void OnDestroyedNote(object sender, NoteEventArgs e)
     {
+        if(e.WasHit)
+        {
+            multiplier += 0.1f;
+            score += Mathf.FloorToInt(multiplier * 100);
+            scoreDisplay.text = score.ToString();
+            multiplierDisplay.text = multiplier.ToString();
+        }
+        else
+        {
+            multiplier = 1f;
+            scoreDisplay.text = score.ToString();
+            multiplierDisplay.text = multiplier.ToString();
+        }
         spawnedNotes.Remove(e.Sender);
         Destroy(e.Sender);
     }
