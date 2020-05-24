@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class Song
 {
-
+    //Name of song
+    public string Name;
     //Number of notes to spawn
     public int NoteNum;
     //An array of values that store information about when to spawn a note in which location
@@ -23,7 +24,7 @@ public class Song
 
     public Song()
     {
-        MinAccuracy = 0.25f;
+        MinAccuracy = 0.50f;
         spawned = 0;
     }
 

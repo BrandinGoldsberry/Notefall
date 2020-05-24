@@ -1,0 +1,54 @@
+{
+  "NoteNum" :  11,
+  "SongSpeed": 4,
+  "SpawnTime_SpawnLoc": [
+    {
+      "Time": 0.0,
+      "SpawnLocation": 0
+    },
+    {
+      "Time": 0.4,
+      "SpawnLocation": 1
+    },
+    {
+      "Time": 0.8,
+      "SpawnLocation": 2
+    },
+    {
+      "Time": 1.2,
+      "SpawnLocation": 0
+    },
+    {
+      "Time": 1.6,
+      "SpawnLocation": 0
+    },
+    {
+      "Time": 2.0,
+      "SpawnLocation": 1
+    },
+    {
+      "Time": 2.4,
+      "SpawnLocation": 0
+    },
+    {
+      "Time": 2.8,
+      "SpawnLocation": 2
+    },
+    {
+      "Time": 3.2,
+      "SpawnLocation": 1
+    },
+    {
+      "Time": 4.2,
+      "SpawnLocation": 0
+    },
+    {
+      "Time": 4.6,
+      "SpawnLocation": 2
+    },
+    {
+      "Time": 5.0,
+      "SpawnLocation": 1
+    }
+  ]
+}
