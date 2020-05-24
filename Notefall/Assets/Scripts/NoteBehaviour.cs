@@ -11,10 +11,12 @@ public class NoteBehaviour : MonoBehaviour
 
     public event EventHandler<NoteEventArgs> NoteDestoyed;
 
+    private GameObject hitBar;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        hitBar = GameObject.Find("HitBar");
     }
 
     // Update is called once per frame
@@ -29,9 +31,9 @@ public class NoteBehaviour : MonoBehaviour
 
         //Basically if you miss a note destory it before it goes too far
         //Helps clean up on screen clutter
-        if(transform.position.y <= -20)
+        if(transform.position.y <= hitBar.transform.position.y)
         {
-            OnDestroyObject(new NoteEventArgs(gameObject));
+            OnDestroyObject(new NoteEventArgs(gameObject, false));
         }
     }
 
@@ -44,8 +46,10 @@ public class NoteBehaviour : MonoBehaviour
 public class NoteEventArgs : EventArgs
 {
     public GameObject Sender { get; set; }
-    public NoteEventArgs(GameObject sender)
+    public bool WasHit { get; set; }
+    public NoteEventArgs(GameObject sender, bool wasHit)
     {
         Sender = sender;
+        WasHit = wasHit;
     }
 }
