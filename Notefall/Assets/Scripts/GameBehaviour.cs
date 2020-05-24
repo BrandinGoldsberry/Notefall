@@ -12,7 +12,7 @@ public class GameBehaviour : MonoBehaviour
     public AudioSource NotePlayer;
     public AudioClip[] NoteSounds;
     //to be created at runtime with the script to load a song
-    public string JSONSong = "F:\\NoteFallSongs\\SongTest.json";
+    public string JSONSong = "F:\\Songs\\SongTest.json";
 
     private GameObject[] SpawnLocations;
     private GameObject hitBar;
