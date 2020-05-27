@@ -12,6 +12,7 @@ public class GameBehaviour : MonoBehaviour
     public GameObject note;
     public AudioSource NotePlayer;
     public AudioClip[] NoteSounds;
+    public AudioSource SongPlayer;
 
     public string SongName;
 
@@ -37,7 +38,7 @@ public class GameBehaviour : MonoBehaviour
 
     void Start()
     {
-        string JSONSong = Application.dataPath + "\\Songs\\" + SongName + ".json";
+        string JSONSong = Application.dataPath + "/Songs/" + SongName + ".json";
         Song = SongLoader.LoadSong(JSONSong);
         scoreDisplay = GameObject.Find("ScoreDisplay").GetComponent<Text>();
         multiplierDisplay = GameObject.Find("MulitplierDisplay").GetComponent<Text>();
@@ -66,6 +67,7 @@ public class GameBehaviour : MonoBehaviour
 
         //hitbar set
         hitBar = GameObject.Find("HitBar");
+        SongPlayer.Play();
     }
 
     //debugvar
@@ -132,9 +134,17 @@ public class GameBehaviour : MonoBehaviour
         //Set the note's speed to the speed of the song
         spawned.GetComponent<NoteBehaviour>().Speed = Song.SongSpeed;
         spawned.GetComponent<NoteBehaviour>().NoteDestoyed += OnDestroyedNote;
+        spawned.GetComponent<NoteBehaviour>().NoteMissed += OnMissedNote;
         //Debug.Log(spawned);
         //setup next spawn
         nextNote = Song.Spawn();
+    }
+
+    void OnMissedNote(object sender, NoteEventArgs e)
+    {
+        multiplier = 1f;
+        scoreDisplay.text = score.ToString();
+        multiplierDisplay.text = multiplier.ToString();
     }
 
     void OnDestroyedNote(object sender, NoteEventArgs e)
