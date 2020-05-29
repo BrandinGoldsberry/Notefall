@@ -37,6 +37,8 @@ public class GameBehaviour : MonoBehaviour
 
     void Start()
     {
+        NpgsqlTest npgsql = new NpgsqlTest();
+        npgsql.RunTest();
         string JSONSong = Application.dataPath + "\\Songs\\" + SongName + ".json";
         Song = SongLoader.LoadSong(JSONSong);
         scoreDisplay = GameObject.Find("ScoreDisplay").GetComponent<Text>();
