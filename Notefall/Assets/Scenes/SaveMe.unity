@@ -585,6 +585,7 @@ MonoBehaviour:
   note: {fileID: 2118675344786473595, guid: c497c7a5bbb99fe45ad167069e982e6c, type: 3}
   NotePlayer: {fileID: 974390982}
   NoteSounds: []
+  SongPlayer: {fileID: 0}
   SongName: SaveMe
 --- !u!1 &1853132679
 GameObject:
