@@ -49,13 +49,13 @@ public class GameBehaviour : MonoBehaviour
 
         //We will most likely be creating the spawn nodes in code rather than fetching them
         //Even more likely we will store raw positions in Vector3 rather than even needing GameObjects
-        Transform spawnLocs = GameObject.Find("NoteSpawnLocs").transform;
+        GameObject holdMyNotes = GameObject.Find("HoldMyNotes");
         SpawnLocations = new GameObject[]
         {
-            spawnLocs.GetChild(0).gameObject,
-            spawnLocs.GetChild(1).gameObject,
-            spawnLocs.GetChild(2).gameObject,
-            spawnLocs.GetChild(3).gameObject
+            Instantiate(new GameObject(), Camera.main.ViewportToWorldPoint(new Vector3(0.2f, 1f, 0)), holdMyNotes.transform.rotation, holdMyNotes.transform),
+            Instantiate(new GameObject(), Camera.main.ViewportToWorldPoint(new Vector3(0.4f, 1f, 0)), holdMyNotes.transform.rotation, holdMyNotes.transform),
+            Instantiate(new GameObject(), Camera.main.ViewportToWorldPoint(new Vector3(0.6f, 1f, 0)), holdMyNotes.transform.rotation, holdMyNotes.transform),
+            Instantiate(new GameObject(), Camera.main.ViewportToWorldPoint(new Vector3(0.8f, 1f, 0)), holdMyNotes.transform.rotation, holdMyNotes.transform),
         };
 
         //initialize spawn
@@ -127,8 +127,11 @@ public class GameBehaviour : MonoBehaviour
     {
         //create a note and then setup next spawn
         //Debug.Log(nextNote.Value);
-        GameObject spawned = Instantiate(note, SpawnLocations[nextNote.SpawnLocation].transform);
+        Vector3 spawnNotePos = SpawnLocations[nextNote.SpawnLocation].transform.position;
+        Quaternion spawnNoteRot = SpawnLocations[nextNote.SpawnLocation].transform.rotation;
+        GameObject spawned = Instantiate(note, spawnNotePos, spawnNoteRot, SpawnLocations[nextNote.SpawnLocation].transform);
         spawned.name = "Note " + Song.spawned;
+        spawned.transform.position = spawnNotePos;
         //add spawned to the list
         spawnedNotes.Add(spawned);
         //Set the note's speed to the speed of the song

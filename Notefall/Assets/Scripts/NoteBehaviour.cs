@@ -30,7 +30,7 @@ public class NoteBehaviour : MonoBehaviour
         //It would silly if we had -20 beats per minute
         transform.Translate(0, Speed * Time.deltaTime * -1, 0);
 
-        //Basically if you miss a note destory it before it goes too far
+        //Basically if you miss a note destroy it before it goes too far
         //Helps clean up on screen clutter
         if (transform.position.y <= hitBar.transform.position.y - 0.3f)
         {

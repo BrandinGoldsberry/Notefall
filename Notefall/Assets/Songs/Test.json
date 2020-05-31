@@ -1,5 +1,6 @@
 {
-  "NoteNum" :  11,
+  "Name":  "Test",
+  "NoteNum": 11,
   "SongSpeed": 4,
   "SpawnTime_SpawnLoc": [
     {
