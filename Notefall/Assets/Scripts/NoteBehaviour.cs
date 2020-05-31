@@ -10,6 +10,7 @@ public class NoteBehaviour : MonoBehaviour
     public int Speed { get; set; }
 
     public event EventHandler<NoteEventArgs> NoteDestoyed;
+    public event EventHandler<NoteEventArgs> NoteMissed;
 
     private GameObject hitBar;
 
@@ -31,7 +32,12 @@ public class NoteBehaviour : MonoBehaviour
 
         //Basically if you miss a note destory it before it goes too far
         //Helps clean up on screen clutter
-        if(transform.position.y <= hitBar.transform.position.y)
+        if (transform.position.y <= hitBar.transform.position.y - 0.3f)
+        {
+            OnNoteMissed(new NoteEventArgs(gameObject, false));
+        }
+
+        if (transform.position.y <= hitBar.transform.position.y - 20)
         {
             OnDestroyObject(new NoteEventArgs(gameObject, false));
         }
@@ -40,6 +46,11 @@ public class NoteBehaviour : MonoBehaviour
     public void OnDestroyObject(NoteEventArgs args)
     {
         NoteDestoyed?.Invoke(this, args);
+    }
+
+    public void OnNoteMissed(NoteEventArgs args)
+    {
+        NoteMissed?.Invoke(this, args);
     }
 }
 
