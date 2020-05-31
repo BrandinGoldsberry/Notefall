@@ -70,7 +70,6 @@ public class SongListGenerator : MonoBehaviour
             }
             foreach (Sprite sprite in SongImages)
             {
-                Debug.Log(sprite.name);
                 if (sprite.name == song.Name)
                 {
                     MainImage.sprite = sprite;
