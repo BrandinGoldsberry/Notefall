@@ -34,9 +34,9 @@ public class VHSPostRender : MonoBehaviour
         {
             _material.SetFloat("_OffsetPosY", offsetPosY + Random.Range(0f, -offsetPosY));
         }
-        else if (Random.Range(0, 150) == 1)
+        else if (Random.Range(0, 500) == 1)
         {
-            _material.SetFloat("_OffsetPosY", Random.Range(-0.1f, 0.1f));
+            _material.SetFloat("_OffsetPosY", Random.Range(-0.05f, 0.05f));
         }
 
         // Channel color shift
@@ -45,7 +45,7 @@ public class VHSPostRender : MonoBehaviour
         {
             _material.SetFloat("_OffsetColor", offsetColor - 0.001f);
         }
-        else if (Random.Range(0, 400) == 1)
+        else if (Random.Range(0, 1000) == 1)
         {
             _material.SetFloat("_OffsetColor", Random.Range(0.001f, 0.03f));
         }

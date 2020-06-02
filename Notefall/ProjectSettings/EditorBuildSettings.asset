@@ -5,7 +5,25 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/MainStage.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/MainMenu.unity
+    guid: 484b316074d2d674ea93c0c5535e0772
+  - enabled: 1
+    path: Assets/Scenes/Payphone.unity
+    guid: 1c0a86681dbf1b041bde58bedabbf215
+  - enabled: 1
+    path: Assets/Scenes/SaveMe.unity
+    guid: d5670850661ad4847bdb535987645c5f
+  - enabled: 1
+    path: Assets/Scenes/SongSelect.unity
+    guid: 285932d62dd873840904792279c89471
+  - enabled: 1
+    path: Assets/Scenes/LogIn.unity
+    guid: 69373b1b5ff2ca74c820e81cf744645e
+  - enabled: 1
+    path: Assets/Scenes/SignUp.unity
+    guid: 461c640d9e05c8f44a0d1b4cf797f67b
   m_configObjects: {}
