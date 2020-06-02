@@ -6,20 +6,37 @@ using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
 {
-    [SerializeField] private Button LogIn;
-    [SerializeField] private Button SignUp;
+    public Button LogIn;
+    public Button SignUp;
+    public Text UserNameDisplay;
+    public Button LogOut;
 
     // Start is called before the first frame update
     void Start()
     {
-        LogIn.onClick.AddListener(() =>
+        if(PersistentVariables.ActiveAccount != null)
         {
-            SceneManager.LoadScene("LogIn");
-        });
-        SignUp.onClick.AddListener(() =>
+            LogIn.gameObject.SetActive(false);
+            SignUp.gameObject.SetActive(false);
+            LogOut.onClick.AddListener(() =>
+            {
+                PersistentVariables.ActiveAccount = null;
+                SceneManager.LoadScene("MainMenu");
+            });
+            UserNameDisplay.text = PersistentVariables.ActiveAccount.Name;
+        }
+        else
         {
-            SceneManager.LoadScene("SignUp");
-        });
+            LogOut.gameObject.SetActive(false);
+            LogIn.onClick.AddListener(() =>
+            {
+                SceneManager.LoadScene("LogIn");
+            });
+            SignUp.onClick.AddListener(() =>
+            {
+                SceneManager.LoadScene("SignUp");
+            });
+        }
     }
 
     // Update is called once per frame

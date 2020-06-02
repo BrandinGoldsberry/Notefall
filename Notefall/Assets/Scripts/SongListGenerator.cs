@@ -1,15 +1,19 @@
-﻿using Assets.Scripts.Util;
+﻿using Assets.Scripts.Models;
+using Assets.Scripts.Util;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SongListGenerator : MonoBehaviour
 {
     public Image MainImage;
     public Text SongName;
+    public Text DisplayScore;
+    public Text DisplayAccuracy;
     public GameObject Content;
     public GameObject SongPrefab;
     public Sprite[] SongImages;
@@ -17,6 +21,7 @@ public class SongListGenerator : MonoBehaviour
     public GameObject AudioSourceSpawner;
     public GameObject Record;
 
+    private string activeSong = "Payphone";
 
     void Start()
     {
@@ -31,6 +36,23 @@ public class SongListGenerator : MonoBehaviour
                 listNum++;
             }
         }
+        if (PersistentVariables.ActiveAccount != null && PersistentVariables.ActiveAccount.Stats != null)
+        {
+            foreach (SongStats stat in PersistentVariables.ActiveAccount.Stats)
+            {
+                if (stat.Name == activeSong)
+                {
+                    DisplayAccuracy.text = "Accuracy: " + stat.Accuracy;
+                    DisplayScore.text = "Score: " + stat.Score;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+        MainImage.preserveAspect = true;
     }
 
 
@@ -58,7 +80,9 @@ public class SongListGenerator : MonoBehaviour
 
         UnityAction songSet = new UnityAction(() =>
         {
-            if(AudioSourceSpawner.transform.childCount > 0)
+            activeSong = song.Name;
+            SongName.text = activeSong;
+            if (AudioSourceSpawner.transform.childCount > 0)
             {
                 Destroy(AudioSourceSpawner.transform.GetChild(0).gameObject);
             }
@@ -77,6 +101,25 @@ public class SongListGenerator : MonoBehaviour
                 {
                     MainImage.sprite = sprite;
                     break;
+                }
+            }
+            if(PersistentVariables.ActiveAccount.Stats != null)
+            {
+                bool songFound = false;
+                foreach (SongStats stat in PersistentVariables.ActiveAccount.Stats)
+                {
+                    if(stat.Name == activeSong)
+                    {
+                        DisplayAccuracy.text = "Accuracy: " + stat.Accuracy;
+                        DisplayScore.text = "Score: " + stat.Score;
+                        songFound = true;
+                        break;
+                    }
+                }
+                if(!songFound)
+                {
+                    DisplayAccuracy.text = "Accuracy: Not Played";
+                    DisplayScore.text = "Score: Not Played";
                 }
             }
         });
