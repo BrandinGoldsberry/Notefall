@@ -1,9 +1,11 @@
 ﻿using Assets.Scripts.Models;
 using Assets.Scripts.Util;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameBehaviour : MonoBehaviour
@@ -13,6 +15,13 @@ public class GameBehaviour : MonoBehaviour
     public AudioSource NotePlayer;
     public AudioClip[] NoteSounds;
     public AudioSource SongPlayer;
+
+    public GameObject EndPanel;
+    public Text FinalScore;
+    public Text FinalAccuracy;
+    public Text FinalCombo;
+    public Text Rating;
+    public Button BackToSongList;
 
     public string SongName;
 
@@ -33,13 +42,22 @@ public class GameBehaviour : MonoBehaviour
 
     private int score = 0;
     private float multiplier = 1;
+    private int highestCombo = 0;
+    private int comboCount = 0;
+    private int totalHit;
     private Text scoreDisplay;
     private Text multiplierDisplay;
 
     void Start()
     {
+        BackToSongList.onClick.AddListener(() =>
+        {
+            SceneManager.LoadScene("SongSelect");
+        });
+
         string JSONSong = Application.dataPath + "/Songs/" + SongName + ".json";
         Song = SongLoader.LoadSong(JSONSong);
+        Song.FixNoteNum();
         scoreDisplay = GameObject.Find("ScoreDisplay").GetComponent<Text>();
         multiplierDisplay = GameObject.Find("MulitplierDisplay").GetComponent<Text>();
 
@@ -59,7 +77,6 @@ public class GameBehaviour : MonoBehaviour
         };
 
         //initialize spawn
-        Debug.Log(Song.SpawnTime_SpawnLoc[0]);
         nextNote = Song.Spawn();
         //add method to event
         //spawnEvent.AddListener(Camera.main.gameObject.GetComponent<DebugText>().UpdateDebugText);
@@ -67,6 +84,10 @@ public class GameBehaviour : MonoBehaviour
 
         //hitbar set
         hitBar = GameObject.Find("HitBar");
+        if (SongPlayer == null)
+        {
+
+        }
         SongPlayer.Play();
     }
 
@@ -77,21 +98,100 @@ public class GameBehaviour : MonoBehaviour
         //If we get this number stop the song
         //Its A) The return of Song.Spawn() if there isn't anymore
         //B) If we get this at any time the thing will break anyway
-        if(nextNote.Time < -1 && spawnedNotes.Count < 1)
+        if (nextNote.Time <= -1 && spawnedNotes.Count < 1)
         {
             //TODO: Write code that jumps to end scene of the song
             //We can do this by creating a Unity Scene with a UI that has variables for setting up the values
-        } 
+            //Scratch that I have a better way
+            EndPanel.SetActive(true);
+            float finalAccuracy = (float)totalHit / Song.NoteNum;
+            FinalAccuracy.text = string.Format("Accuracy: {0:P2}.", finalAccuracy);
+            if(finalAccuracy > 0.99f)
+            {
+                //ss
+                Rating.text = "SS";
+                Rating.color = new Color(0.956f, 0.945f, 0.043f);
+            }
+            else if (finalAccuracy > 0.95f)
+            {
+                //s
+                Rating.text = "S";
+                Rating.color = new Color(0.878f, 0.878f, 0.847f);
+            }
+            else if (finalAccuracy > 0.90f)
+            {
+                //a
+                Rating.text = "A";
+                Rating.color = new Color(0.203f, 0.952f, 0.043f);
+            }
+            else if (finalAccuracy > 0.80f)
+            {
+                //b
+                Rating.text = "B";
+                Rating.color = new Color(0.992f, 0.976f, 0.317f);
+            }
+            else if (finalAccuracy > 0.70f)
+            {
+                //c
+                Rating.text = "C";
+                Rating.color = new Color(0.988f, 0.721f, 0.321f);
+            }
+            else if (finalAccuracy > 0.60f) {
+                //d
+                Rating.text = "D";
+                Rating.color = new Color(1f, 0.309f, 0.309f);
+            }
+            else if (finalAccuracy > 0.50f)
+            {
+                //e
+                Rating.text = "E";
+                Rating.color = new Color(0.874f, 0.435f, 0.435f);
+            }
+            else 
+            {
+                //f
+                Rating.text = "F";
+                Rating.color = new Color(0.729f, 0.580f, 0.580f);
+            }
+            FinalCombo.text = "Hi-Combo: " + highestCombo.ToString();
+            FinalScore.text = "Score: " + score.ToString();
+            scoreDisplay.gameObject.SetActive(false);
+            multiplierDisplay.gameObject.SetActive(false);
+            if(PersistentVariables.ActiveAccount != null)
+            {
+                Account curAcc = PersistentVariables.ActiveAccount;
+                foreach(SongStats stats in curAcc.Stats)
+                {
+                    if(stats.Name == Song.Name)
+                    {
+                        stats.Played = true;
+                        if(highestCombo > stats.LongestCombo)
+                        {
+                            stats.LongestCombo = highestCombo;
+                        }
+                        if (score > stats.Score)
+                        {
+                            stats.Score = score;
+                        }
+                        if (finalAccuracy > stats.Accuracy)
+                        {
+                            stats.Accuracy = finalAccuracy;
+                        }
+                        Account.UpdateAccount(curAcc);
+                    }
+                }
+            }
+        }
         else
         {
             //Redundancy for cleaner code
-            CurrentTime = Time.time;
+            CurrentTime = Time.timeSinceLevelLoad;
             //Debug.Log("CT:" + CurrentTime + " NN: " + nextNote.Key + "TF: " + (CurrentTime > nextNote.Key));
 
             //On next frame where time is greater than the target time spawn the next note
             if (nextNote.Time > -1 && CurrentTime > nextNote.Time)
             {
-                
+
                 spawnEvent.Invoke();
             }
             //get if left mouse was click (should work on mobile too)
@@ -101,7 +201,7 @@ public class GameBehaviour : MonoBehaviour
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
                 //Check if player clicked within margin of error of the hitbar
-                if(hitBar.transform.position.y < mousePos.y + Song.MinAccuracy && hitBar.transform.position.y > mousePos.y - Song.MinAccuracy)
+                if (hitBar.transform.position.y < mousePos.y + Song.MinAccuracy && hitBar.transform.position.y > mousePos.y - Song.MinAccuracy)
                 {
                     //Grab ONLY the x and y position, its a 2d game
                     Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
@@ -147,24 +247,29 @@ public class GameBehaviour : MonoBehaviour
     {
         multiplier = 1f;
         scoreDisplay.text = score.ToString();
-        multiplierDisplay.text = multiplier.ToString();
+        comboCount = 0;
+        multiplierDisplay.text = comboCount.ToString() + "x";
     }
 
     void OnDestroyedNote(object sender, NoteEventArgs e)
     {
-        if(e.WasHit)
+        Debug.Log(e.WasHit);
+        if (e.WasHit)
         {
+            comboCount++;
+            highestCombo = comboCount > highestCombo ? comboCount : highestCombo;
             multiplier += 0.1f;
+            totalHit++;
             score += Mathf.FloorToInt(multiplier * 100);
             scoreDisplay.text = score.ToString();
-            multiplierDisplay.text = multiplier.ToString();
+            multiplierDisplay.text = comboCount.ToString() + "x";
         }
-        else
-        {
-            multiplier = 1f;
-            scoreDisplay.text = score.ToString();
-            multiplierDisplay.text = multiplier.ToString();
-        }
+        //else
+        //{
+        //    multiplier = 1f;
+        //    scoreDisplay.text = score.ToString();
+        //    multiplierDisplay.text = multiplier.ToString();
+        //}
         spawnedNotes.Remove(e.Sender);
         Destroy(e.Sender);
     }

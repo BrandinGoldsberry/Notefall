@@ -52,7 +52,20 @@ namespace Assets.Scripts.Models
                 Account account = new Account()
                 {
                     Name = Name,
-                    PassWord = Password
+                    PassWord = Password,
+                    Stats = new SongStats[2]
+                    {
+                        new SongStats()
+                        {
+                            Name = "Payphone",
+                            Played = false
+                        },
+                        new SongStats()
+                        {
+                            Name = "Save Me",
+                            Played = false
+                        },
+                    }
                 };
                 string newJson = JsonUtility.ToJson(account);
                 File.WriteAllText(accPath, newJson);
@@ -76,8 +89,10 @@ namespace Assets.Scripts.Models
     public class SongStats
     {
         public string Name;
+        public bool Played;
         public float Accuracy;
         public int Score;
+        public int LongestCombo;
     }
 
     public class AccountExistsException : Exception

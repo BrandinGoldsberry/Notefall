@@ -10,6 +10,7 @@ public class MainMenuController : MonoBehaviour
     public Button SignUp;
     public Text UserNameDisplay;
     public Button LogOut;
+    public GameObject JukeBox;
 
     // Start is called before the first frame update
     void Start()
@@ -24,9 +25,11 @@ public class MainMenuController : MonoBehaviour
                 SceneManager.LoadScene("MainMenu");
             });
             UserNameDisplay.text = PersistentVariables.ActiveAccount.Name;
+            JukeBox.SetActive(true);
         }
         else
         {
+            JukeBox.SetActive(false);
             LogOut.gameObject.SetActive(false);
             LogIn.onClick.AddListener(() =>
             {

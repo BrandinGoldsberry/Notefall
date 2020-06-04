@@ -37,6 +37,11 @@ public class Song
         MinAccuracy = 0.25f;
     }
 
+    public void FixNoteNum()
+    {
+        NoteNum = SpawnTime_SpawnLoc.Length;
+    }
+
     //Gives the next note to spawn and increments spawn count
     public NoteTime Spawn()
     {

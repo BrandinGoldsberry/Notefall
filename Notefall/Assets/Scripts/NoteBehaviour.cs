@@ -13,6 +13,7 @@ public class NoteBehaviour : MonoBehaviour
     public event EventHandler<NoteEventArgs> NoteMissed;
 
     private GameObject hitBar;
+    private bool disable;
 
     // Start is called before the first frame update
     void Start()
@@ -32,13 +33,15 @@ public class NoteBehaviour : MonoBehaviour
 
         //Basically if you miss a note destroy it before it goes too far
         //Helps clean up on screen clutter
-        if (transform.position.y <= hitBar.transform.position.y - 0.3f)
+        if (transform.position.y <= hitBar.transform.position.y - 0.3f && !disable)
         {
+            disable = true;
             OnNoteMissed(new NoteEventArgs(gameObject, false));
         }
 
         if (transform.position.y <= hitBar.transform.position.y - 20)
         {
+            disable = true;
             OnDestroyObject(new NoteEventArgs(gameObject, false));
         }
     }

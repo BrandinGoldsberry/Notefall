@@ -26,7 +26,8 @@ public class MovingGradient : MonoBehaviour
     void UpdateTex()
     {
         mat.mainTexture = GetTexture(1000);
-        timeOffset += 0.001f;
+        
+        timeOffset += 0.003f;
         if(timeOffset >= 1)
         {
             timeOffset = -1f;
