@@ -30,17 +30,9 @@ public class SongListGenerator : MonoBehaviour
         {
             SceneManager.LoadScene("MainMenu");
         });
-        string SongPath = Application.dataPath + "/Songs";
-        DirectoryInfo info = new DirectoryInfo(SongPath);
-        int listNum = 0;
-        foreach(FileInfo file in info.GetFiles())
-        {
-            if(file.Extension == ".json")
-            {
-                AddToList(SongLoader.LoadSong(file.FullName), listNum);
-                listNum++;
-            }
-        }
+
+        AddToList(SongLoader.LoadSong("SaveMe"), 0);
+        AddToList(SongLoader.LoadSong("Payphone"), 1);
         //Set to always true for debug purposes
         if (/*PersistentVariables.ActiveAccount != null && PersistentVariables.ActiveAccount.Stats != null*/ true)
         {

@@ -10,10 +10,10 @@ namespace Assets.Scripts.Util
 {
     public class SongLoader
     {
-        public static Song LoadSong(string JSONPath) 
+        public static Song LoadSong(string SongName) 
         {
-            string loadedJson = File.ReadAllText(JSONPath);
-            return JsonUtility.FromJson<Song>(loadedJson);
+            TextAsset loadedJson = (TextAsset) Resources.Load(SongName, typeof(TextAsset));
+            return JsonUtility.FromJson<Song>(loadedJson.text);
         }
     }
 }

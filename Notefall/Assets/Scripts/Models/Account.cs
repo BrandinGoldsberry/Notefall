@@ -15,12 +15,16 @@ namespace Assets.Scripts.Models
         public string PassWord;
         public SongStats[] Stats;
 
-        private static string AccountsPath = Application.dataPath + "/Accounts/";
+        private static string AccountsPath = Application.persistentDataPath + "/Accounts/";
 
         public Account() { }
 
         public static Account FindAccount(string Name, string Password)
         {
+            if (!Directory.Exists(AccountsPath))
+            {
+                Directory.CreateDirectory(AccountsPath);
+            }
             string accPath = AccountsPath + Name + ".json";
             if(File.Exists(accPath))
             {
@@ -42,6 +46,10 @@ namespace Assets.Scripts.Models
 
         public static Account CreateAccount(string Name, string Password)
         {
+            if(!Directory.Exists(AccountsPath))
+            {
+                Directory.CreateDirectory(AccountsPath);
+            }
             string accPath = AccountsPath + Name + ".json";
             if(String.IsNullOrWhiteSpace(Name) || String.IsNullOrWhiteSpace(Password))
             {
@@ -79,6 +87,10 @@ namespace Assets.Scripts.Models
 
         public static void UpdateAccount(Account account)
         {
+            if (!Directory.Exists(AccountsPath))
+            {
+                Directory.CreateDirectory(AccountsPath);
+            }
             string accPath = AccountsPath + account.Name + ".json";
             string newJson = JsonUtility.ToJson(account);
             File.WriteAllText(accPath, newJson);

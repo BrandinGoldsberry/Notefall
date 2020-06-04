@@ -55,8 +55,7 @@ public class GameBehaviour : MonoBehaviour
             SceneManager.LoadScene("SongSelect");
         });
 
-        string JSONSong = Application.dataPath + "/Songs/" + SongName + ".json";
-        Song = SongLoader.LoadSong(JSONSong);
+        Song = SongLoader.LoadSong(SongName);
         Song.FixNoteNum();
         scoreDisplay = GameObject.Find("ScoreDisplay").GetComponent<Text>();
         multiplierDisplay = GameObject.Find("MulitplierDisplay").GetComponent<Text>();
